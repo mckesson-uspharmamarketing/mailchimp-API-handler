@@ -1,5 +1,6 @@
 # Don't include login credentials with API key
 /user_login_credentials.py
+/client_secret.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
