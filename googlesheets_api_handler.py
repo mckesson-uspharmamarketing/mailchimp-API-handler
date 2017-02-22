@@ -17,7 +17,7 @@ except ImportError:
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'Drug Shortages Weekly Dashboard'
+APPLICATION_NAME = 'Drug Shortages Dashboard Updater' 
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -37,13 +37,16 @@ def get_credentials():
         os.makedirs(credential_dir)
     #credential_path = 'C:\Users\ece03ht\.credentials\sheets.googleapis.com-python-quickstart.json'
     credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.com-python-quickstart.json')
+                                   'sheets.googleapis.com-drugshortagesweekly.json')
     #store = 
     store = Storage(credential_path)
     credentials = store.get()
+    #if credentials don't exist or are invalid...
     if not credentials or credentials.invalid:
+        #
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
+        print (flow.user_agent)
         if flags:
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatibility with Python 2.6
@@ -62,26 +65,22 @@ def main():
     credentials = get_credentials()
     #http and discoveryUrl are used in building the service object. discovery must be part of a module?
     http = credentials.authorize(httplib2.Http())
-    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
-                    'version=v4')
-    service = discovery.build('sheets', 'v4', http=http,
-                              discoveryServiceUrl=discoveryUrl)
+    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
+    service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
     #https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}
     spreadsheetId = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
 
-    rangeName = 'MASTER!A2:D'
-    result = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=rangeName).execute()
+    specified_range = 'MASTER!A1:D4'
+    result = service.spreadsheets().values().get(spreadsheetId=spreadsheetId, range=specified_range).execute()
     values = result.get('values', [])
 
     if not values:
         print('No data found.')
     else:
-        print('Name, Major:')
+        print('Campaign, Position Type:')
         for each_row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (each_row[0], each_row[4]))
+            print('%s, %s' % (each_row[1], each_row[2]))
 
 
 if __name__ == '__main__':
