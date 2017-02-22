@@ -28,13 +28,17 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
+    #home_dir = 'C:\Users\ece03ht\'
     home_dir = os.path.expanduser('~')
+    #credential_dir = 'C:\Users\ece03ht\.credentials'
     credential_dir = os.path.join(home_dir, '.credentials')
+    #if there's not already a directory 'C:\Users\ece03ht\.credentials', then make it.
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
+    #credential_path = 'C:\Users\ece03ht\.credentials\sheets.googleapis.com-python-quickstart.json'
     credential_path = os.path.join(credential_dir,
                                    'sheets.googleapis.com-python-quickstart.json')
-
+    #store = 
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
@@ -46,6 +50,7 @@ def get_credentials():
             credentials = tools.run(flow, store)
         print('Storing credentials to ' + credential_path)
     return credentials
+    print (credentials)
 
 def main():
     """Shows basic usage of the Sheets API.
@@ -55,12 +60,14 @@ def main():
     https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
     """
     credentials = get_credentials()
+    #http and discoveryUrl are used in building the service object. discovery must be part of a module?
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
                     'version=v4')
     service = discovery.build('sheets', 'v4', http=http,
                               discoveryServiceUrl=discoveryUrl)
 
+    #https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}
     spreadsheetId = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
 
     rangeName = 'MASTER!A2:D'
