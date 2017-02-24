@@ -61,36 +61,34 @@ def main():
     #that groups all the reources associated with the API
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
-    print ("This is the result of calling discovery:", discovery)
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
-    print ("This is the result of calling service:", service)
     
     #https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    specified_range = 'MASTER!A1'
+    specified_range = 'SUMMARY!A1'
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
-                        "values": [["Test Value 0"]]
+                        "values": [["Cell 1A", "Cell 1B"], [], ["Cell A3", "Cell A3"]]
                     }
     #result = with the service object, call the method spreadsheets.values.get() and input the spreadsheet ID and range
     #result is a JSON object, with nested cell key for "values"
     result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=specified_range, valueInputOption='USER_ENTERED', body=request_body).execute()
     print ("This is the result of calling spreadsheets.values.update() on the service object:", result)
 
+"""
     values = result.get('values', [])
-
     if not values:
         print('No data found.')
     else:
         print('Response Body')
         print(values)
-
+"""
 if __name__ == '__main__':
     main()
 
 
 #TODO: Set values for attributes such as total delivered, open rate, and click through rate
-#TODO: Identify the right document by ID number: 
+ 
 #TODO: Identify the correct section of the spreadsheet by the first column name. Make a new row at the top or bottom of the section.
 #TODO: Write the appropriate values in the corresponding columns
