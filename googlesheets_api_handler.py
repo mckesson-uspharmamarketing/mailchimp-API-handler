@@ -67,21 +67,24 @@ def main():
     
     #https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    specified_range = 'MASTER!A1:D4'
-    
+    specified_range = 'MASTER!A1'
+    request_body = {
+                        #"range": string,
+                        #"majorDimension": ROWS,
+                        "values": [["Test Value 0"]]
+                    }
     #result = with the service object, call the method spreadsheets.values.get() and input the spreadsheet ID and range
     #result is a JSON object, with nested cell key for "values"
-    result = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
-    print ("This is the result of calling spreadsheets.values.get() on the service object:", result)
+    result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=specified_range, valueInputOption='USER_ENTERED', body=request_body).execute()
+    print ("This is the result of calling spreadsheets.values.update() on the service object:", result)
 
     values = result.get('values', [])
 
     if not values:
         print('No data found.')
     else:
-        print('Campaign, Position Type:')
-        for each_row in values:
-            print(each_row[1], each_row[2], each_row[3])
+        print('Response Body')
+        print(values)
 
 if __name__ == '__main__':
     main()
