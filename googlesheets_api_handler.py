@@ -54,27 +54,40 @@ def get_credentials():
     return credentials
     print ("These are the credentials:", credentials)
 
+#def find_range_for_start():
+
+def find_append_location(service)
+    #READ SHEET, find correct WRITE-TO location
+    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+    for specified_range = 'SUMMARY!B4' in until result returns 'FALSE':
+        #specified_range = find_range_for_start("Month")
+        read_values_object = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
+        read_values_array = read_values_object.get('values', [])
+        result = read_values_array is_blank?
+        
+    block_length = read_values_array.sum_of_objects_in_array
+    append_value = specified_range.take(last) + block_length
+    write_location = specified_range.strip(last).append(append_value)
+
 def main():
     credentials = get_credentials()
-    
-    #Google has a "Discovery document" that includes a top-level "resources" section
-    #that groups all the reources associated with the API
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
-    
-    #https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}
+
+#WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    specified_range = 'SUMMARY!A1'
+    #specified_range = find_range_for_append("Month")
+    range_location = find_append_location(service)
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
-                        "values": [["Cell 1A", "Cell 1B"], [], ["Cell A3", "Cell A3"]]
+                        "values": [
+                        [],
+                        ["2013-05 updated"]
+                        ]
                     }
-    #result = with the service object, call the method spreadsheets.values.get() and input the spreadsheet ID and range
-    #result is a JSON object, with nested cell key for "values"
-    result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=specified_range, valueInputOption='USER_ENTERED', body=request_body).execute()
-    print ("This is the result of calling spreadsheets.values.update() on the service object:", result)
+    service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
 
 """
     values = result.get('values', [])
@@ -87,8 +100,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-#TODO: Set values for attributes such as total delivered, open rate, and click through rate
- 
-#TODO: Identify the correct section of the spreadsheet by the first column name. Make a new row at the top or bottom of the section.
-#TODO: Write the appropriate values in the corresponding columns
+#TODO: Make a new row at the top or bottom of the section.
