@@ -56,18 +56,18 @@ def get_credentials():
 
 #def find_range_for_start():
 
-def find_append_location(service)
+#def find_append_location(service)
     #READ SHEET, find correct WRITE-TO location
-    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    for specified_range = 'SUMMARY!B4' in until result returns 'FALSE':
+#    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+    #for specified_range = 'SUMMARY!B4' in until result returns 'FALSE':
         #specified_range = find_range_for_start("Month")
-        read_values_object = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
-        read_values_array = read_values_object.get('values', [])
-        result = read_values_array is_blank?
-        
-    block_length = read_values_array.sum_of_objects_in_array
-    append_value = specified_range.take(last) + block_length
-    write_location = specified_range.strip(last).append(append_value)
+    #    read_values_object = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
+    #    read_values_array = read_values_object.get('values', [])
+    #    result = read_values_array is_blank?
+
+    #block_length = read_values_array.sum_of_objects_in_array
+    #append_value = specified_range.take(last) + block_length
+    #write_location = specified_range.strip(last).append(append_value)
 
 def main():
     credentials = get_credentials()
@@ -77,8 +77,8 @@ def main():
 
 #WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    #specified_range = find_range_for_append("Month")
-    range_location = find_append_location(service)
+    range_location = find_append_location("Month")
+    #range_location = find_append_location(service)
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
