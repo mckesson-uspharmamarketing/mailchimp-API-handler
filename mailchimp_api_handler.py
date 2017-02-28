@@ -11,9 +11,9 @@ c_id_340b_ashp_invite = '2855413'
 
 all_data_json = client.reports.all(get_all=True)
 all_reports = all_data_json['reports']
-#reports_in_daterange = all_reports[0:50]
+reports_in_daterange = all_reports[0:50]
 #criteria is case sensitive
-matching_reports = [reports for reports in all_reports if "Drug Shortages" in reports["campaign_title"]]
+matching_reports = [reports for reports in reports_in_daterange if "Drug Shortages" in reports["campaign_title"]]
 
 for report in matching_reports:
 	campaign_id = report['id']

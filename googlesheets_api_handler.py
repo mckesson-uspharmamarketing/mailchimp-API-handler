@@ -58,9 +58,9 @@ def get_credentials():
 
 #def find_append_location(service)
     #READ SHEET, find correct WRITE-TO location
-#    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     #for specified_range = 'SUMMARY!B4' in until result returns 'FALSE':
-        #specified_range = find_range_for_start("Month")
+    #    specified_range = find_range_for_start("Month")
     #    read_values_object = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
     #    read_values_array = read_values_object.get('values', [])
     #    result = read_values_array is_blank?
@@ -77,12 +77,14 @@ def main():
 
 #WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    range_location = find_append_location("Month")
+    #range_location = find_append_location("Month")
     #range_location = find_append_location(service)
+    range_location = 'MASTER!B2'
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
                         "values": [
+                        ['Cell B2', 'Cell C2'],
                         [],
                         ["2013-05 updated"]
                         ]
