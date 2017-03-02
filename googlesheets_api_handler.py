@@ -62,14 +62,26 @@ def find_append_location(service_object):
     row = str(values_array.index(['Month'])) #+ 1)
     start_range = "SUMMARY!B" + row
     return start_range
-"""
+
 def make_new_row(service_object, location):
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    #row_data_object = makerowdata(location)
-    request_body = (location)
-    result = service_object.spreadsheets().values().batchUpdate(spreadsheetId=spreadsheet_id, body=request_body).execute()
-    print (result)
-"""
+    request_body = {
+                    "requests": [
+                        {"insertDimension": {
+                            "range": {
+                                #"sheetId": spreadsheet_id,
+                                "dimension": "ROWS",
+                                "startIndex": 23,
+                                "endIndex": 24
+                                },
+                                "inheritFromBefore": True
+                            }
+                        }
+                        ]
+                    }
+    result = service_object.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=request_body).execute()
+    print ("Result from make_new_row:", result)
+
 def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
@@ -80,14 +92,14 @@ def main():
 #WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     range_location = find_append_location(service)
-#    make_new_row(service, range_location)
+    make_new_row(service, range_location)
 
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
                         "values": [
                         [],
-                        ['This will be the new date', '11.11%', '22.22%', '33.33%', '111']
+                        ['Test only']
                         ]
                     }
     result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
