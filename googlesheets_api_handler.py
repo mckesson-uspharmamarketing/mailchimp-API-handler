@@ -36,8 +36,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     #credential_path = 'C:\Users\ece03ht\.credentials\sheets.googleapis.com-python-quickstart.json'
-    credential_path = os.path.join(credential_dir,
-                                   'sheets.googleapis.com-drugshortagesweekly.json')
+    credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-drugshortagesweekly.json')
     store = Storage(credential_path)
     credentials = store.get()
     
@@ -54,20 +53,15 @@ def get_credentials():
     return credentials
     print ("These are the credentials:", credentials)
 
-#def find_range_for_start():
-
-#def find_append_location(service)
+def find_append_location(service_object):
     #READ SHEET, find correct WRITE-TO location
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    #for specified_range = 'SUMMARY!B4' in until result returns 'FALSE':
-    #    specified_range = find_range_for_start("Month")
-    #    read_values_object = service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
-    #    read_values_array = read_values_object.get('values', [])
-    #    result = read_values_array is_blank?
-
-    #block_length = read_values_array.sum_of_objects_in_array
-    #append_value = specified_range.take(last) + block_length
-    #write_location = specified_range.strip(last).append(append_value)
+    specified_range = 'SUMMARY!A1:A'
+    read_values_object = service_object.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
+    values_array = read_values_object['values']
+    row = str(values_array.index(['Month']) + 1)
+    start_range = "SUMMARY!B" + row
+    return start_range
 
 def main():
     credentials = get_credentials()
@@ -75,31 +69,27 @@ def main():
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
+    range_location = find_append_location(service)
 #WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
-    #range_location = find_append_location("Month")
-    #range_location = find_append_location(service)
-    range_location = 'MASTER!B2'
+    range_location = find_append_location(service)
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
                         "values": [
-                        ['Cell B2', 'Cell C2'],
                         [],
-                        ["2013-05 updated"]
+                        ['This will be the new date', '11.11%', '22.22%', '33.33%', '111']
                         ]
                     }
-    service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
-
-"""
+    result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
+    print (result)
+'''
     values = result.get('values', [])
     if not values:
         print('No data found.')
     else:
         print('Response Body')
         print(values)
-"""
+'''
 if __name__ == '__main__':
     main()
-
-#TODO: Make a new row at the top or bottom of the section.
