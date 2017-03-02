@@ -88,12 +88,9 @@ def main():
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
-    range_location = find_append_location(service)
-#WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     range_location = find_append_location(service)
     make_new_row(service, range_location)
-
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
@@ -102,6 +99,7 @@ def main():
                         ['Test only']
                         ]
                     }
+                    
     result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
     print (result)
 '''
