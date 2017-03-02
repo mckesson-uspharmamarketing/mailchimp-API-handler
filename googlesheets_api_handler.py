@@ -59,10 +59,17 @@ def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
     read_values_object = service_object.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
     values_array = read_values_object['values']
-    row = str(values_array.index(['Month']) + 1)
+    row = str(values_array.index(['Month'])) #+ 1)
     start_range = "SUMMARY!B" + row
     return start_range
-
+"""
+def make_new_row(service_object, location):
+    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+    #row_data_object = makerowdata(location)
+    request_body = (location)
+    result = service_object.spreadsheets().values().batchUpdate(spreadsheetId=spreadsheet_id, body=request_body).execute()
+    print (result)
+"""
 def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
@@ -73,6 +80,8 @@ def main():
 #WRITE TO SHEET
     spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     range_location = find_append_location(service)
+#    make_new_row(service, range_location)
+
     request_body = {
                         #"range": string,
                         #"majorDimension": ROWS,
