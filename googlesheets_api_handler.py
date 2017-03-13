@@ -18,6 +18,7 @@ except ImportError:
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Drug Shortages Dashboard Updater' 
+SPREADSHEET_ID = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -36,7 +37,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     #credential_path = 'C:\Users\ece03ht\.credentials\sheets.googleapis.com-python-quickstart.json'
-    credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-drugshortagesweekly.json')
+    credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-drugshortagesweekly-macOSX.json')
     store = Storage(credential_path)
     credentials = store.get()
     
@@ -55,31 +56,36 @@ def get_credentials():
 
 def find_append_location(service_object):
     #READ SHEET, find correct WRITE-TO location
-    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     specified_range = 'SUMMARY!A1:A'
-    read_values_object = service_object.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range=specified_range).execute()
+    read_values_object = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
     values_array = read_values_object['values']
     row = str(values_array.index(['Month'])) #+ 1)
     start_range = "SUMMARY!B" + row
     return start_range
 
+def get_sheet_id(service_object):
+    result = service_object.spreadsheets().values().getProperties(spreadsheetId=SPREADSHEET_ID).execute()
+    #https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties
+    print (result)
+
 def make_new_row(service_object, location):
-    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+    sheet_id = get_sheet_id(service_object)
     request_body = {
                     "requests": [
-                        {"insertDimension": {
-                            "range": {
-                                #"sheetId": spreadsheet_id,
+                        {"appendDimension": {
+                            #"range": {
+                                "sheetId": 1,
                                 "dimension": "ROWS",
-                                "startIndex": 23,
-                                "endIndex": 24
-                                },
-                                "inheritFromBefore": True
+                                "length": 1,
+                                #"startIndex": 3,
+                                #"endIndex": 4
+                                #},
+                                #"inheritFromBefore": True
                             }
                         }
                         ]
-                    }
-    result = service_object.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=request_body).execute()
+                    }                
+    result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
     print ("Result from make_new_row:", result)
 
 def main():
@@ -88,7 +94,6 @@ def main():
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
-    spreadsheet_id = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
     range_location = find_append_location(service)
     make_new_row(service, range_location)
     request_body = {
@@ -96,11 +101,11 @@ def main():
                         #"majorDimension": ROWS,
                         "values": [
                         [],
-                        ['Test only']
+                        ['MACOSX Test only']
                         ]
                     }
                     
-    result = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
+    result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
     print (result)
 '''
     values = result.get('values', [])
@@ -112,3 +117,4 @@ def main():
 '''
 if __name__ == '__main__':
     main()
+
