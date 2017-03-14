@@ -86,15 +86,15 @@ def make_new_row(service_object, location):
     #sheet_id = get_sheet_id(service_object)
     request_body = {
                     "requests": [
-                        {"appendDimension": {
-                            #"range": {
+                        {"insertDimension": {
+                            "range": {
                                 "sheetId": 1856914348,
                                 "dimension": "ROWS",
-                                "length": 1,
-                                #"startIndex": 3,
-                                #"endIndex": 4
-                                #},
-                                #"inheritFromBefore": True
+                                #"length": 1,
+                                "startIndex": 20 ,
+                                "endIndex": 21
+                                },
+                                "inheritFromBefore": True
                             }
                         }
                         ]
