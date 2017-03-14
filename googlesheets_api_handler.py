@@ -1,6 +1,8 @@
 from __future__ import print_function
 import httplib2
 import os
+import json
+import requests
 
 from apiclient import discovery
 from oauth2client import client
@@ -54,19 +56,31 @@ def get_credentials():
     return credentials
     print ("These are the credentials:", credentials)
 
+def main():
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
+    service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
+
+    range_location = find_append_location(service)
+    make_new_row(service, range_location)
+    request_body = {
+                        #"range": string,
+                        #"majorDimension": ROWS,
+                        "values": [
+                        [],
+                        ['MACOSX Test only']
+                        ]
+                    }
+    result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
+
 def find_append_location(service_object):
-    #READ SHEET, find correct WRITE-TO location
     specified_range = 'SUMMARY!A1:A'
     read_values_object = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
     values_array = read_values_object['values']
     row = str(values_array.index(['Month'])) #+ 1)
     start_range = "SUMMARY!B" + row
     return start_range
-
-def get_sheet_id(service_object):
-    result = service_object.spreadsheets().values().getProperties(spreadsheetId=SPREADSHEET_ID).execute()
-    #https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties
-    print (result)
 
 def make_new_row(service_object, location):
     sheet_id = get_sheet_id(service_object)
@@ -88,33 +102,23 @@ def make_new_row(service_object, location):
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
     print ("Result from make_new_row:", result)
 
-def main():
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
-    service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
+def get_sheet_id(service_object):
+    url = "https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties"
+    params = dict(spreadsheetId=SPREADSHEET_ID)
+    result = service_object.get(url=url, params=params)
+    data = json.loads(result.text)
+    #result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID)
+    #https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties
+    print ("RESULT FROM GET_SHEET_ID", data)
 
-    range_location = find_append_location(service)
-    make_new_row(service, range_location)
-    request_body = {
-                        #"range": string,
-                        #"majorDimension": ROWS,
-                        "values": [
-                        [],
-                        ['MACOSX Test only']
-                        ]
-                    }
-                    
-    result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
-    print (result)
-'''
+if __name__ == '__main__':
+    main()
+
+"""
     values = result.get('values', [])
     if not values:
         print('No data found.')
     else:
         print('Response Body')
         print(values)
-'''
-if __name__ == '__main__':
-    main()
-
+"""
