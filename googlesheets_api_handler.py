@@ -83,12 +83,12 @@ def find_append_location(service_object):
     return start_range
 
 def make_new_row(service_object, location):
-    sheet_id = get_sheet_id(service_object)
+    #sheet_id = get_sheet_id(service_object)
     request_body = {
                     "requests": [
                         {"appendDimension": {
                             #"range": {
-                                "sheetId": 1,
+                                "sheetId": 1856914348,
                                 "dimension": "ROWS",
                                 "length": 1,
                                 #"startIndex": 3,
@@ -105,7 +105,7 @@ def make_new_row(service_object, location):
 def get_sheet_id(service_object):
     url = "https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties"
     params = dict(spreadsheetId=SPREADSHEET_ID)
-    result = service_object.get(url=url, params=params)
+    result = requests.get(url=url, params=params)
     data = json.loads(result.text)
     #result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID)
     #https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties
