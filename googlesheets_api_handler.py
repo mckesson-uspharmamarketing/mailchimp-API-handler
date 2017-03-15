@@ -1,8 +1,6 @@
 from __future__ import print_function
 import httplib2
 import os
-import json
-import requests
 
 from apiclient import discovery
 from oauth2client import client
@@ -31,20 +29,16 @@ def get_credentials():
     Returns:
         Credentials, the obtained credential.
     """
-    #home_dir = 'C:\Users\ece03ht\'
     home_dir = os.path.expanduser('~')
-    #credential_dir = 'C:\Users\ece03ht\.credentials'
     credential_dir = os.path.join(home_dir, '.credentials')
-    #if there's not already a directory 'C:\Users\ece03ht\.credentials', then make it.
+
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    #credential_path = 'C:\Users\ece03ht\.credentials\sheets.googleapis.com-python-quickstart.json'
+    
     credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-drugshortagesweekly-macOSX.json')
     store = Storage(credential_path)
     credentials = store.get()
     
-    #If credentials don't exist or are invalid...
-    #Make a json file with the appropriate information
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
