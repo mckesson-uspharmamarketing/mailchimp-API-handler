@@ -58,12 +58,12 @@ def main():
 
     range_location = find_append_location(service)
     make_new_row(service, range_location)
+
+    #range_location = 'SUMMARY!B21:B'
     request_body = {
-                        #"range": string,
-                        #"majorDimension": ROWS,
                         "values": [
-                        [],
-                        ['MACOSX Test only']
+                        ["month", "delivery_rate", "open_rate", "clickthru_rate", "clicks"],
+                        #['MACOSX Test only']
                         ]
                     }
     result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
@@ -75,10 +75,16 @@ def find_append_location(service_object):
     values_array = read_values_object['values']
     row = str(values_array.index(['Month'])) #+ 1)
     start_range = "SUMMARY!B" + row
-    return start_range
+    #"SUMMARY!B3"
+    #return start_range
+    sample_start_range = "SUMMARY!B21"
+    return sample_start_range
 
 def make_new_row(service_object, location):
     sheet_id = get_sheet_id(service_object)
+    start_index = location[9:12]
+    print ("start_index", start_index)
+    end_index = int(start_index) + 1
     request_body = {
                     "requests": [
                         {"insertDimension": {
@@ -86,8 +92,8 @@ def make_new_row(service_object, location):
                                 "sheetId": sheet_id,
                                 "dimension": "ROWS",
                                 #"length": 1,
-                                "startIndex": 20 ,
-                                "endIndex": 21
+                                "startIndex": start_index,
+                                "endIndex": end_index
                                 },
                                 "inheritFromBefore": True
                             }
