@@ -81,10 +81,12 @@ def find_append_location(service_object):
     return sample_start_range
 
 def make_new_row(service_object, location):
-    sheet_id = get_sheet_id(service_object)
+    sheet_id_result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
+    sheet_id = sheet_id_result['sheets'][0]['properties']['sheetId']
+
     start_index = location[9:12]
-    print ("start_index", start_index)
     end_index = int(start_index) + 1
+
     request_body = {
                     "requests": [
                         {"insertDimension": {
@@ -102,11 +104,6 @@ def make_new_row(service_object, location):
                     }                
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
 
-def get_sheet_id(service_object):
-    result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
-    s_id = result['sheets'][0]['properties']['sheetId']
-    return s_id
-
 
 if __name__ == '__main__':
     main()
@@ -116,6 +113,7 @@ if __name__ == '__main__':
     if not values:
         print('No data found.')
     else:
+
         print('Response Body')
         print(values)
 """
