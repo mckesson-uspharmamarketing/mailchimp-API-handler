@@ -73,6 +73,7 @@ def main():
                         ]
                     }
     result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
+    print (result)
 
 def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
@@ -83,12 +84,12 @@ def find_append_location(service_object):
     return start_range
 
 def make_new_row(service_object, location):
-    #sheet_id = get_sheet_id(service_object)
+    sheet_id = get_sheet_id(service_object)
     request_body = {
                     "requests": [
                         {"insertDimension": {
                             "range": {
-                                "sheetId": 1856914348,
+                                "sheetId": sheet_id,
                                 "dimension": "ROWS",
                                 #"length": 1,
                                 "startIndex": 20 ,
@@ -100,16 +101,12 @@ def make_new_row(service_object, location):
                         ]
                     }                
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
-    print ("Result from make_new_row:", result)
 
 def get_sheet_id(service_object):
-    url = "https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties"
-    params = dict(spreadsheetId=SPREADSHEET_ID)
-    result = requests.get(url=url, params=params)
-    data = json.loads(result.text)
-    #result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID)
-    #https://sheets.googleapis.com/v4/spreadsheets/spreadsheetId?&fields=sheets.properties
-    print ("RESULT FROM GET_SHEET_ID", data)
+    result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
+    s_id = result['sheets'][0]['properties']['sheetId']
+    return s_id
+
 
 if __name__ == '__main__':
     main()
