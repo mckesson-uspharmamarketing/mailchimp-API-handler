@@ -7,7 +7,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-import mailchimp_api_handler
+import mailchimp_api_wrapper
 
 try:
     import argparse
