@@ -1,0 +1,1 @@
+from mailchimp_api_handler import reports_result

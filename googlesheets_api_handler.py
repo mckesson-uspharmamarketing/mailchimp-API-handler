@@ -7,6 +7,8 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
+import mailchimp_api_handler
+
 try:
     import argparse
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -58,11 +60,11 @@ def main():
 
     range_location = find_append_location(service)
     make_new_row(service, range_location)
+    report = get_mailchimp_reports
+    delivery_rate = report.total_delivered / report.total_sent
 
-    #range_location = 'SUMMARY!B21:B'
-    request_body = {
-                        "values": [
-                        ["month", "delivery_rate", "open_rate", "clickthru_rate", "clicks"],
+    request_body = {"values": [
+                        ["Mar-2017", delivery_rate, report.open_rate, report.clickthru_rate, report.clicks],
                         #['MACOSX Test only']
                         ]
                     }
@@ -77,6 +79,9 @@ def find_append_location(service_object):
     start_range = "SUMMARY!B" + row
     #"SUMMARY!B3"
     #return start_range
+    #need to write formula for finding lower append location based on upper append location
+    #can do this with their searching for index of first blank row
+    #OR use json search and manipulation method to find length each section
     sample_start_range = "SUMMARY!B21"
     return sample_start_range
 
@@ -104,6 +109,14 @@ def make_new_row(service_object, location):
                     }                
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
 
+def get_mailchimp_reports():
+    reports = reports_result("Feb 2017", "Drug Shortages")
+    #reports_list = []
+    first_report = single_report(reports[0])
+    return first_report
+    #for report in reports:
+    #    report = single_report(report)
+    #    reports_list.append(report)
 
 if __name__ == '__main__':
     main()
