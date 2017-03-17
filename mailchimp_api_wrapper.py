@@ -4,7 +4,7 @@ from mailchimp3 import MailChimp
 from user_login_credentials import user_name
 from user_login_credentials import api_key
 
-def reports_result(date_range, campaign_name_search)
+def reports_result(date_range, campaign_name_search):
 	client = MailChimp(user_name, api_key)
 
 	#c_id_drugshortages_02142017 = '61ee93e4b8'
@@ -16,7 +16,7 @@ def reports_result(date_range, campaign_name_search)
 	matching_reports = [reports for reports in reports_in_daterange if campaign_name_search in reports["campaign_title"]]
 	return matching_reports
 
-def single_report(report_data)
+def single_report(report_data):
 	self.campaign_id = report_data['id']
 	self.subject_line = report_data['subject_line']
 	self.list_name = report_data['list_name']
