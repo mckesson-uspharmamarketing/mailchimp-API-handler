@@ -1,3 +1,4 @@
+from __future__ import division
 import json
 import mailchimp3
 from mailchimp3 import MailChimp
@@ -21,22 +22,26 @@ class single_report:
 		self.campaign_id = report_data['id']
 		self.subject_line = report_data['subject_line']
 		self.list_name = report_data['list_name']
-		self.unsubscribes = report_data['unsubscribed']
 		self.send_time = report_data['send_time']
 
 		self.total_sent = report_data['emails_sent']
-		self.total_opens = report_data['opens']['opens_total']
-		self.unique_opens = report_data['opens']['unique_opens']
-		self.open_rate = "%.2f" % (report_data['opens']['open_rate'] * 100)
-
-		self.total_clicks = report_data['clicks']['clicks_total']
-		self.unique_clicks = report_data['clicks']['unique_clicks']
-		self.click_rate = "%.2f" % (report_data['clicks']['click_rate'] * 100) 
 		self.total_bounces = report_data['bounces']['hard_bounces'] + report_data['bounces']['soft_bounces'] + report_data['bounces']['syntax_errors']
 		self.hard_bounces = report_data['bounces']['hard_bounces']
 		self.soft_bounces = report_data['bounces']['soft_bounces']
 		self.total_delivered = self.total_sent - self.total_bounces
-		self.clickthru_rate = "%.2f" % (self.total_clicks / self.total_delivered * 100)
+		self.unsubscribes = report_data['unsubscribed']
+		
+		self.total_opens = report_data['opens']['opens_total']
+		self.unique_opens = report_data['opens']['unique_opens']
+
+		self.total_clicks = report_data['clicks']['clicks_total']
+		self.unique_clicks = report_data['clicks']['unique_clicks']
+
+		self.send_date = self.send_time[0:7]
+		self.delivery_rate = str(self.total_delivered / self.total_sent * 100) + "%"
+		self.open_rate = str("%.2f" % (report_data['opens']['open_rate'] * 100)) + "%"
+		self.click_rate = str("%.2f" % (report_data['clicks']['click_rate'] * 100)) + "%"
+		self.clickthru_rate = str("%.2f" % (self.total_clicks / self.total_delivered * 100)) + "%"
 
 
 #class output_data_object(campaign_title, list, subject_lines=[], total_sent, total_bounces, total_clicks, unique_clicks=null, ab_splittest_data=null)

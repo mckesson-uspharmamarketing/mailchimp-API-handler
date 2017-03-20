@@ -61,11 +61,8 @@ def main():
     range_location = find_append_location(service)
     make_new_row(service, range_location)
     report = get_mailchimp_reports()
-    delivery_rate = report.total_delivered / report.total_sent * 100
-    print ("DELIVERY RATE:", delivery_rate, "OPEN RATE:", report.open_rate, "CLICKTHRU RATE:", report.clickthru_rate, "CLICKS:", report.total_clicks)
     request_body = {"values": [
-                        [report.send_time, delivery_rate, report.open_rate, report.clickthru_rate, report.total_clicks],
-                        #['MACOSX Test only']
+                        [report.send_date, report.delivery_rate, report.open_rate, report.clickthru_rate, report.total_clicks],
                         ]
                     }
     result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
