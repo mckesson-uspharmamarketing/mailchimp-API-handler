@@ -61,17 +61,16 @@ def main():
     range_location = find_append_location(service)
     make_new_row(service, range_location)
     report = get_mailchimp_reports()
-    """
-    delivery_rate = report.total_delivered / report.total_sent
-
+    delivery_rate = report.total_delivered / report.total_sent * 100
+    print ("DELIVERY RATE:", delivery_rate, "OPEN RATE:", report.open_rate, "CLICKTHRU RATE:", report.clickthru_rate, "CLICKS:", report.total_clicks)
     request_body = {"values": [
-                        ["Mar-2017", delivery_rate, report.open_rate, report.clickthru_rate, report.clicks],
+                        [report.send_time, delivery_rate, report.open_rate, report.clickthru_rate, report.total_clicks],
                         #['MACOSX Test only']
                         ]
                     }
     result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
     print (result)
-    """
+    
 def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
     read_values_object = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
@@ -112,11 +111,11 @@ def make_new_row(service_object, location):
 
 def get_mailchimp_reports():
     reports = reports_result("Feb 2017", "Drug Shortages")
-    #reports_list = []
-    print (reports)
     first_report = single_report(reports[0])
-    #return first_report
-    print (first_report)
+    return first_report
+    #print ("first_report", first_report)
+    
+    #reports_list = []
     #for report in reports:
     #    report = single_report(report)
     #    reports_list.append(report)

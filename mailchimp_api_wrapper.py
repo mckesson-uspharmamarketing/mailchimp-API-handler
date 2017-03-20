@@ -16,25 +16,27 @@ def reports_result(date_range, campaign_name_search):
 	matching_reports = [reports for reports in reports_in_daterange if campaign_name_search in reports["campaign_title"]]
 	return matching_reports
 
-def single_report(report_data):
-	self.campaign_id = report_data['id']
-	self.subject_line = report_data['subject_line']
-	self.list_name = report_data['list_name']
-	self.unsubscribes = report_data['unsubscribed']
+class single_report:
+	def __init__(self, report_data):
+		self.campaign_id = report_data['id']
+		self.subject_line = report_data['subject_line']
+		self.list_name = report_data['list_name']
+		self.unsubscribes = report_data['unsubscribed']
+		self.send_time = report_data['send_time']
 
-	self.total_sent = report_data['emails_sent']
-	self.total_opens = report_data['opens']['opens_total']
-	self.unique_opens = report_data['opens']['unique_opens']
-	self.open_rate = "%.2f" % (report_data['opens']['open_rate'] * 100)
+		self.total_sent = report_data['emails_sent']
+		self.total_opens = report_data['opens']['opens_total']
+		self.unique_opens = report_data['opens']['unique_opens']
+		self.open_rate = "%.2f" % (report_data['opens']['open_rate'] * 100)
 
-	self.total_clicks = report_data['clicks']['clicks_total']
-	self.unique_clicks = report_data['clicks']['unique_clicks']
-	self.click_rate = "%.2f" % (report_data['clicks']['click_rate'] * 100) 
-	self.total_bounces = report_data['bounces']['hard_bounces'] + report_data['bounces']['soft_bounces'] + report_data['bounces']['syntax_errors']
-	self.hard_bounces = report_data['bounces']['hard_bounces']
-	self.soft_bounces = report_data['bounces']['soft_bounces']
-	self.total_delivered = total_sent - total_bounces
-	self.clickthru_rate = "%.2f" % (total_clicks / total_delivered * 100)
+		self.total_clicks = report_data['clicks']['clicks_total']
+		self.unique_clicks = report_data['clicks']['unique_clicks']
+		self.click_rate = "%.2f" % (report_data['clicks']['click_rate'] * 100) 
+		self.total_bounces = report_data['bounces']['hard_bounces'] + report_data['bounces']['soft_bounces'] + report_data['bounces']['syntax_errors']
+		self.hard_bounces = report_data['bounces']['hard_bounces']
+		self.soft_bounces = report_data['bounces']['soft_bounces']
+		self.total_delivered = self.total_sent - self.total_bounces
+		self.clickthru_rate = "%.2f" % (self.total_clicks / self.total_delivered * 100)
 
 
 #class output_data_object(campaign_title, list, subject_lines=[], total_sent, total_bounces, total_clicks, unique_clicks=null, ab_splittest_data=null)
