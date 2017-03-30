@@ -19,8 +19,9 @@ except ImportError:
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'Drug Shortages Dashboard Updater' 
-SPREADSHEET_ID = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro'
+APPLICATION_NAME = 'MHS Dashboard Updater' 
+#SPREADSHEET_ID = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro' # Drug Shortages Dashboard
+SPREADSHEET_ID = '1C7uoBdMLYQyaQUAX3VBeA8FWPCzJbKmOZqIK7C2MqT8' # Market Insights Dashboard
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -37,7 +38,7 @@ def get_credentials():
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     
-    credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-drugshortagesweekly-macOSX.json')
+    credential_path = os.path.join(credential_dir, 'sheets.googleapis.com-marketinsights-test.json')
     store = Storage(credential_path)
     credentials = store.get()
     
@@ -79,7 +80,7 @@ def find_append_location(service_object):
     #need to write formula for finding lower append location based on upper append location
     #can do this with their searching for index of first blank row
     #OR use json search and manipulation method to find length each section
-    sample_start_range = "SUMMARY!B21"
+    sample_start_range = "SUMMARY!B22"
     return sample_start_range
 
 def make_new_row(service_object, location):
@@ -95,7 +96,6 @@ def make_new_row(service_object, location):
                             "range": {
                                 "sheetId": sheet_id,
                                 "dimension": "ROWS",
-                                #"length": 1,
                                 "startIndex": start_index,
                                 "endIndex": end_index
                                 },
@@ -107,6 +107,7 @@ def make_new_row(service_object, location):
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
 
 def get_mailchimp_reports():
+    #reports = reports_result("Feb 2017", "340B")
     reports = reports_result("Feb 2017", "Drug Shortages")
     first_report = single_report(reports[0])
     return first_report

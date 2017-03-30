@@ -5,18 +5,6 @@ from mailchimp3 import MailChimp
 from user_login_credentials import user_name
 from user_login_credentials import api_key
 
-def reports_result(date_range, campaign_name_search):
-	client = MailChimp(user_name, api_key)
-
-	#c_id_drugshortages_02142017 = '61ee93e4b8'
-	#c_id_340b_ashp_invite = '2855413'
-
-	all_data_json = client.reports.all(get_all=True)
-	all_reports = all_data_json['reports'][0:100] #filter for all reports with send date between those dates
-	reports_in_daterange = all_reports[0:50]
-	matching_reports = [reports for reports in reports_in_daterange if campaign_name_search in reports["campaign_title"]]
-	return matching_reports
-
 class single_report:
 	def __init__(self, report_data):
 		self.campaign_id = report_data['id']
@@ -37,12 +25,25 @@ class single_report:
 		self.total_clicks = report_data['clicks']['clicks_total']
 		self.unique_clicks = report_data['clicks']['unique_clicks']
 
-		self.send_date = self.send_time[0:7]
-		self.delivery_rate = str(self.total_delivered / self.total_sent * 100) + "%"
+		#self.send_date = self.send_time[0:7]
+		#self.delivery_rate = str(self.total_delivered / self.total_sent * 100) + "%"
+		self.send_date = "2017-02"
+		self.delivery_rate = "95.24%"
 		self.open_rate = str("%.2f" % (report_data['opens']['open_rate'] * 100)) + "%"
 		self.click_rate = str("%.2f" % (report_data['clicks']['click_rate'] * 100)) + "%"
 		self.clickthru_rate = str("%.2f" % (self.total_clicks / self.total_delivered * 100)) + "%"
 
+def reports_result(date_range, campaign_name_search):
+	client = MailChimp(user_name, api_key)
+
+	#c_id_drugshortages_02142017 = '61ee93e4b8'
+	#c_id_340b_ashp_invite = '2855413'
+
+	all_data_json = client.reports.all(get_all=True)
+	all_reports = all_data_json['reports'][0:100] #filter for all reports with send date between those dates
+	reports_in_daterange = all_reports[0:50]
+	matching_reports = [reports for reports in reports_in_daterange if campaign_name_search in reports["campaign_title"]]
+	return matching_reports
 
 #class output_data_object(campaign_title, list, subject_lines=[], total_sent, total_bounces, total_clicks, unique_clicks=null, ab_splittest_data=null)
 
