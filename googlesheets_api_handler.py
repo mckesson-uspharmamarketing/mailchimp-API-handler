@@ -20,8 +20,8 @@ except ImportError:
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'MHS Dashboard Updater' 
-#SPREADSHEET_ID = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro' # Drug Shortages Dashboard
-SPREADSHEET_ID = '1C7uoBdMLYQyaQUAX3VBeA8FWPCzJbKmOZqIK7C2MqT8' # Market Insights Dashboard
+SPREADSHEET_ID = '1VOd_RJZozTm4JtJtvXQtcRzaqW9UsS3nKKwfBkiOLro' # Drug Shortages Dashboard
+#SPREADSHEET_ID = '1C7uoBdMLYQyaQUAX3VBeA8FWPCzJbKmOZqIK7C2MqT8' # Market Insights Dashboard
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -60,28 +60,42 @@ def main():
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
 
     range_location = find_append_location(service)
-    make_new_row(service, range_location)
-    report = get_mailchimp_reports()
-    request_body = {"values": [
-                        [report.send_date, report.delivery_rate, report.open_rate, report.clickthru_rate, report.total_clicks],
-                        ]
-                    }
-    result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
-    print (result)
-    
+"""    
+    all_report_data = get_mailchimp_reports
+
+    for single_report in all_report_data and i=0
+        make_new_row(service, range_location)
+
+    for single_report in all_report_data and i=0
+        report = mailchimp_reports(n)
+        request_body = {"values": [
+                            [report.send_date, report.delivery_rate, report.open_rate, report.clickthru_rate, report.total_clicks],
+                            ]
+                        }
+        result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
+        print (result)
+"""    
 def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
-    read_values_object = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
-    values_array = read_values_object['values']
-    row = str(values_array.index(['Month'])) #+ 1)
-    start_range = "SUMMARY!B" + row
-    #"SUMMARY!B3"
-    #return start_range
-    #need to write formula for finding lower append location based on upper append location
-    #can do this with their searching for index of first blank row
-    #OR use json search and manipulation method to find length each section
-    sample_start_range = "SUMMARY!B22"
-    return sample_start_range
+    read_values_object_a = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
+    column_a_values = read_values_object_a['values']
+    start_row = column_a_values.index(['Date']) + 1
+
+    dates_column_range = 'SUMMARY!B1:B'
+    read_values_object_b = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=dates_column_range).execute()
+    column_b_values = read_values_object_b['values']
+    
+    # Find first blank row in Dates/Months section for inputting new values
+    index = 0
+    for value in column_b_values:
+        print ("value is:", value)
+        if not value and index > start_row: 
+            first_blank_row = "SUMMARY!B" + str(index)
+            print ("first blank row", first_blank_row)
+            return first_blank_row
+        else:
+            print ("index is:", index)
+            index += 1
 
 def make_new_row(service_object, location):
     sheet_id_result = service_object.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
@@ -108,9 +122,18 @@ def make_new_row(service_object, location):
 
 def get_mailchimp_reports():
     #reports = reports_result("Feb 2017", "340B")
-    reports = reports_result("Feb 2017", "Drug Shortages")
+    reports = reports_result("Feb 2017", "Drug Shortages Weekly")
+    all_reports = []
     first_report = single_report(reports[0])
     return first_report
+"""
+    for report in reports and i=0
+        report_data = single_report(reports[i])
+        all_reports = all_reports.append(report_data)
+        i = i++1
+    return all_reports
+"""
+
     #print ("first_report", first_report)
     
     #reports_list = []

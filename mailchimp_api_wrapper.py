@@ -25,10 +25,8 @@ class single_report:
 		self.total_clicks = report_data['clicks']['clicks_total']
 		self.unique_clicks = report_data['clicks']['unique_clicks']
 
-		#self.send_date = self.send_time[0:7]
-		#self.delivery_rate = str(self.total_delivered / self.total_sent * 100) + "%"
-		self.send_date = "2017-02"
-		self.delivery_rate = "95.24%"
+		self.send_date = self.send_time[0:7]
+		self.delivery_rate = str(self.total_delivered / self.total_sent * 100) + "%"
 		self.open_rate = str("%.2f" % (report_data['opens']['open_rate'] * 100)) + "%"
 		self.click_rate = str("%.2f" % (report_data['clicks']['click_rate'] * 100)) + "%"
 		self.clickthru_rate = str("%.2f" % (self.total_clicks / self.total_delivered * 100)) + "%"
