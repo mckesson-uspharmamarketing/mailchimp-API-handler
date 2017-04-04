@@ -70,12 +70,7 @@ def main():
         print ("result", result)
         range_location_index = int(range_location[9:12]) + 1
         range_location = "SUMMARY!B" + str(range_location_index)
-        """
-        if index == 10:
-            return
-        else:
-            range_location += 1
-        """ 
+
 def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
     read_values_object_a = service_object.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=specified_range).execute()
@@ -119,7 +114,6 @@ def make_new_row(service_object, location):
     result = service_object.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=request_body).execute()
 
 def get_mailchimp_reports(date_range, name_search_term):
-    #reports = reports_result("Feb 2017", "340B")
     reports = reports_result(date_range, name_search_term)
     
     #first_report = single_report(reports[0])
@@ -135,22 +129,5 @@ def get_mailchimp_reports(date_range, name_search_term):
 
     return all_reports
 
-    #print ("first_report", first_report)
-    
-    #reports_list = []
-    #for report in reports:
-    #    report = single_report(report)
-    #    reports_list.append(report)
-
 if __name__ == '__main__':
     main()
-
-"""
-    values = result.get('values', [])
-    if not values:
-        print('No data found.')
-    else:
-
-        print('Response Body')
-        print(values)
-"""

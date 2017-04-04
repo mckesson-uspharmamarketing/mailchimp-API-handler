@@ -34,21 +34,7 @@ class single_report:
 def reports_result(date_range, campaign_name_search):
 	client = MailChimp(user_name, api_key)
 	all_data_json = client.reports.all(get_all=True)
-	all_reports = all_data_json['reports']#[0:100] #filter for all reports with send date between those dates
-	reports_in_daterange = all_reports[0:50]
+	all_reports = all_data_json['reports']
+	reports_in_daterange = all_reports[0:50] # TODO: create new method find_index_for_date_range to handle a simple string date range input and provide the right index number for this filter
 	matching_reports = [reports for reports in reports_in_daterange if campaign_name_search in reports["campaign_title"]]
 	return matching_reports
-
-#class output_data_object(campaign_title, list, subject_lines=[], total_sent, total_bounces, total_clicks, unique_clicks=null, ab_splittest_data=null)
-
-#there were 43 campaigns sent in Jan 2017, 31 campaigns in Dec 2016, 41 campaigns in Nov 2016
-
-#TODO: find a way to search for campaigns criteria without having to loop through entire range. for example, if there's a built in method for searching a json object for matching criteria
-#TODO: find a way to search for campaigns with data range criteria. same as above
-#TODO: search for ways to input data into a specific cells of a google document
-
-#total_campaigns = client.reports.all(get_all=True)['total_items']
-#matching_reports = []
-#for campaign in range (0, 50):
-#	if "Drug Shortages" in all_reports[campaign]['campaign_title']:
-#		matching_reports.append(all_reports[campaign])
