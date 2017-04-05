@@ -55,21 +55,27 @@ def main():
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?version=v4')
     service = discovery.build('sheets', 'v4', http=http, discoveryServiceUrl=discoveryUrl)
     
-    range_location = find_append_location(service)
-    all_reports = get_mailchimp_reports("Feb 2017", "Drug Shortages")
-    print ("ALL REPORTS:", all_reports)
-    index = 0
-
-    for single_report in all_reports:
-        make_new_row(service, range_location)
+    #range_location = find_append_location(service)
+    range_location = "SUMMARY!A25"
+    all_reports = get_mailchimp_reports("Month", "Drug Shortages")
+    
+    for each_report in all_reports:
+        #make_new_row(service, range_location)
+        click_data = click_report_object(each_report.campaign_id)
+        
         request_body = {"values": [
-                            [single_report.send_date, single_report.delivery_rate, single_report.open_rate, single_report.clickthru_rate, single_report.total_clicks],
+                            [each_report.subject_line, each_report.send_date, each_report.delivery_rate, each_report.open_rate, each_report.clickthru_rate, each_report.list_name, 
+                            click_data.url_1, click_data.total_clicks_1, click_data.total_click_percent_1, click_data.unique_clicks_1, click_data.unique_click_percent_1,
+                            click_data.url_2, click_data.total_clicks_2, click_data.total_click_percent_2, click_data.unique_clicks_2, click_data.unique_click_percent_2,
+                            click_data.url_3, click_data.total_clicks_3, click_data.total_click_percent_3, click_data.unique_clicks_3, click_data.unique_click_percent_3,
+                            click_data.url_4, click_data.total_clicks_4, click_data.total_click_percent_4, click_data.unique_clicks_4, click_data.unique_click_percent_4,
+                            click_data.url_5, click_data.total_clicks_5, click_data.total_click_percent_5, click_data.unique_clicks_5, click_data.unique_click_percent_5,
+                            click_data.url_6, click_data.total_clicks_6, click_data.total_click_percent_6, click_data.unique_clicks_6, click_data.unique_click_percent_6],
                             ]
                         }
-        result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()  
-        print ("result", result)
+        result = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=range_location, valueInputOption='USER_ENTERED', body=request_body).execute()
         range_location_index = int(range_location[9:12]) + 1
-        range_location = "SUMMARY!B" + str(range_location_index)
+        range_location = "SUMMARY!A" + str(range_location_index)
 
 def find_append_location(service_object):
     specified_range = 'SUMMARY!A1:A'
@@ -85,7 +91,7 @@ def find_append_location(service_object):
     index = 0
     for value in column_b_values:
         if not value and index > start_row: 
-            first_blank_row = "SUMMARY!B" + str(index)
+            first_blank_row = "SUMMARY!A" + str(index)
             return first_blank_row
         else:
             index += 1
